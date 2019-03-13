@@ -49,14 +49,17 @@ public class ElevensBoard extends Board {
 	public boolean isLegal(List<Integer> selectedCards) {
 		/* *** TO BE MODIFIED IN ACTIVITY 11 *** */
 		if (selectedCards.size() == 2) {
-			for(int i=0; i<findPairSum11(selectedCards).size(); i++){
-
+			if(findPairSum11(selectedCards).get(0)!= null && findPairSum11(selectedCards).get(1)!= null){
+				return true;
 			}
 		} else if (selectedCards.size() == 3) {
-			return containsJQK(selectedCards);
+			if(findJQK(cardIndexes()).get(0)!= null && findJQK(cardIndexes()).get(1)!=null && findJQK(cardIndexes()).get(2)!=null ){
+				return true;
+			}
 		} else {
 			return false;
 		}
+		return false;
 	}
 
 	/**
@@ -71,7 +74,15 @@ public class ElevensBoard extends Board {
 	public boolean anotherPlayIsPossible() {
 		/* *** TO BE MODIFIED IN ACTIVITY 11 *** */
 		List<Integer> cIndexes = cardIndexes();
-		return findPairSum11(cIndexes) || containsJQK(cIndexes);
+		if (findPairSum11(cardIndexes()).size() > 0){
+			if ((findPairSum11(cIndexes).get(0) != null && findPairSum11(cardIndexes()).get(1) != null)) {
+				return true;
+			}
+			else if(findJQK(cardIndexes()).get(0)!= null && findJQK(cardIndexes()).get(1)!=null && findJQK(cardIndexes()).get(2)!=null ){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -107,22 +118,30 @@ public class ElevensBoard extends Board {
 	 * @return a list of the indexes of a JQK, if a JQK was found;
 	 *         an empty list, if a JQK was not found.
 	 */
-	private boolean containsJQK(List<Integer> selectedCards) {
+	private List<Integer> findJQK(List<Integer> selectedCards) {
 		/* *** TO BE CHANGED INTO findJQK IN ACTIVITY 11 *** */
-		boolean foundJack = false;
+		ArrayList<Integer> indexes = new ArrayList<Integer>();
+		boolean foundJack=false;
 		boolean foundQueen = false;
 		boolean foundKing = false;
 		for (Integer kObj : selectedCards) {
 			int k = kObj.intValue();
 			if (cardAt(k).rank().equals("jack")) {
-				foundJack = true;
+				foundJack=true;
+				indexes.add(k);
 			} else if (cardAt(k).rank().equals("queen")) {
-				foundQueen = true;
+				foundQueen=true;
+				indexes.add(k);
 			} else if (cardAt(k).rank().equals("king")) {
-				foundKing = true;
+				foundKing=true;
+				indexes.add(k);
 			}
+
 		}
-		return foundJack && foundQueen && foundKing;
+		if(foundJack && foundQueen && foundKing) {
+			return indexes;
+		}
+		return indexes;
 	}
 
 	/**
@@ -131,7 +150,9 @@ public class ElevensBoard extends Board {
 	 */
 	public boolean playIfPossible() {
 		/* *** TO BE IMPLEMENTED IN ACTIVITY 11 *** */
-		return false; // REPLACE !
+		if(isLegal(cardIndexes())){
+			return true;
+		}
 	}
 
 	/**
